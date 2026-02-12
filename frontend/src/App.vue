@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useClienteStore } from '@/stores/clienteStore'
 
-const router = useRouter()
 const store = useClienteStore()
 
 onMounted(async () => {

@@ -15,7 +15,7 @@ describe('useValidacoes', () => {
       expect(validarCpf('111.111.111-11')).toBe(false)
     })
     it('rejeita CPF com dígitos verificadores inválidos', () => {
-      expect(validarCpf('111.444.777-35')).toBe(false)
+      expect(validarCpf('111.444.777-36')).toBe(false)
     })
   })
 

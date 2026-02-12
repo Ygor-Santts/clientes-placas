@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useDebounce } from './useDebounce'
 
 describe('useDebounce', () => {
@@ -16,16 +16,18 @@ describe('useDebounce', () => {
     expect(debounced.value).toBe(0)
     source.value = 1
     expect(debounced.value).toBe(0)
-    vi.advanceTimersByTime(400)
+    await vi.advanceTimersByTimeAsync(400)
+    await nextTick()
     expect(debounced.value).toBe(1)
   })
 
-  it('só emite o último valor se vários mudanças no intervalo', () => {
+  it('só emite o último valor se vários mudanças no intervalo', async () => {
     const source = ref('a')
     const debounced = useDebounce(source, 400)
     source.value = 'b'
     source.value = 'c'
-    vi.advanceTimersByTime(400)
+    await vi.advanceTimersByTimeAsync(400)
+    await nextTick()
     expect(debounced.value).toBe('c')
   })
 })
