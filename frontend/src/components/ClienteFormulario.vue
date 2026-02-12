@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { mascaraCpf, mascaraTelefone, mascaraCep, mascaraPlaca } from '@/composables/useMascaras'
 import { validarCpf, validarTelefone, validarPlaca } from '@/composables/useValidacoes'
 import { useViaCep } from '@/composables/useViaCep'
+import { LIMITES_FORMULARIO } from '@/constants/formulario'
+import CampoCPF from '@/components/form/CampoCPF.vue'
+import CampoTelefone from '@/components/form/CampoTelefone.vue'
+import CampoCEP from '@/components/form/CampoCEP.vue'
+import CampoPlaca from '@/components/form/CampoPlaca.vue'
 import type { Cliente, ClienteCreate } from '@/types/cliente'
 
 const props = defineProps<{
   cliente: Cliente | null
+  saving?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -80,6 +85,8 @@ function validar(): boolean {
   else if (!validarCpf(cpf.value)) e.cpf = 'CPF inválido'
   if (!placaCarro.value.trim()) e.placaCarro = 'Placa é obrigatória'
   else if (!validarPlaca(placaCarro.value)) e.placaCarro = 'Placa inválida (Mercosul ou antigo)'
+  const cepDigits = cep.value.replace(/\D/g, '')
+  if (cepDigits.length > 0 && cepDigits.length !== 8) e.cep = 'CEP deve ter 8 dígitos'
   erros.value = e
   if (Object.keys(e).length) {
     alertMessage.value = 'Corrija os erros do formulário.'
@@ -89,8 +96,17 @@ function validar(): boolean {
   return true
 }
 
+function clearErro(campo: keyof typeof erros.value) {
+  if (erros.value[campo]) {
+    const next = { ...erros.value }
+    delete next[campo]
+    erros.value = next
+    if (Object.keys(next).length === 0) alertMessage.value = ''
+  }
+}
+
 function submit() {
-  if (!validar()) return
+  if (props.saving || !validar()) return
   emit('salvar', {
     nome: nome.value.trim(),
     telefone: telefone.value,
@@ -104,25 +120,6 @@ function submit() {
   })
 }
 
-function onInputCpf(e: Event) {
-  const t = (e.target as HTMLInputElement).value
-  cpf.value = mascaraCpf(t)
-}
-
-function onInputTelefone(e: Event) {
-  const t = (e.target as HTMLInputElement).value
-  telefone.value = mascaraTelefone(t)
-}
-
-function onInputCep(e: Event) {
-  const t = (e.target as HTMLInputElement).value
-  cep.value = mascaraCep(t)
-}
-
-function onInputPlaca(e: Event) {
-  const t = (e.target as HTMLInputElement).value
-  placaCarro.value = mascaraPlaca(t)
-}
 </script>
 
 <template>
@@ -149,42 +146,35 @@ function onInputPlaca(e: Event) {
           label="Nome"
           required
           :error-messages="erros.nome"
+          :maxlength="LIMITES_FORMULARIO.nome"
+          counter
           aria-required="true"
           hide-details="auto"
+          @input="clearErro('nome')"
         />
       </v-col>
       <v-col cols="12" md="6">
-        <v-text-field
-          :model-value="telefone"
-          label="Telefone"
-          required
+        <CampoTelefone
+          v-model="telefone"
           :error-messages="erros.telefone"
-          aria-required="true"
-          hide-details="auto"
-          @input="onInputTelefone"
+          required
+          @clear-error="clearErro('telefone')"
         />
       </v-col>
       <v-col cols="12" md="6">
-        <v-text-field
-          :model-value="cpf"
-          label="CPF"
-          required
+        <CampoCPF
+          v-model="cpf"
           :error-messages="erros.cpf"
-          aria-required="true"
-          hide-details="auto"
-          @input="onInputCpf"
+          required
+          @clear-error="clearErro('cpf')"
         />
       </v-col>
       <v-col cols="12" md="6">
-        <v-text-field
-          :model-value="placaCarro"
-          label="Placa do carro"
-          required
+        <CampoPlaca
+          v-model="placaCarro"
           :error-messages="erros.placaCarro"
-          aria-required="true"
-          hide-details="auto"
-          maxlength="7"
-          @input="onInputPlaca"
+          required
+          @clear-error="clearErro('placaCarro')"
         />
       </v-col>
     </v-row>
@@ -194,19 +184,20 @@ function onInputPlaca(e: Event) {
     </p>
     <v-row>
       <v-col cols="12" md="4">
-        <v-text-field
-          :model-value="cep"
-          label="CEP"
-          hide-details="auto"
-          @input="onInputCep"
+        <CampoCEP
+          v-model="cep"
+          :error-messages="erros.cep"
+          :loading="loadingCep"
+          @clear-error="clearErro('cep')"
           @blur="onCepBlur"
         />
-        <v-progress-linear v-if="loadingCep" indeterminate color="primary" class="mt-1" />
       </v-col>
       <v-col cols="12" md="8">
         <v-text-field
           v-model="logradouro"
           label="Logradouro"
+          :maxlength="LIMITES_FORMULARIO.logradouro"
+          counter
           hide-details="auto"
         />
       </v-col>
@@ -214,6 +205,8 @@ function onInputPlaca(e: Event) {
         <v-text-field
           v-model="bairro"
           label="Bairro"
+          :maxlength="LIMITES_FORMULARIO.bairro"
+          counter
           hide-details="auto"
         />
       </v-col>
@@ -221,6 +214,8 @@ function onInputPlaca(e: Event) {
         <v-text-field
           v-model="cidade"
           label="Cidade"
+          :maxlength="LIMITES_FORMULARIO.cidade"
+          counter
           hide-details="auto"
         />
       </v-col>
@@ -228,15 +223,24 @@ function onInputPlaca(e: Event) {
         <v-text-field
           v-model="uf"
           label="UF"
+          :maxlength="LIMITES_FORMULARIO.uf"
+          counter
           hide-details="auto"
-          maxlength="2"
         />
       </v-col>
     </v-row>
     <v-divider class="my-4" />
     <v-card-actions class="px-0">
-      <v-btn type="submit" color="primary" prepend-icon="mdi-content-save">Salvar</v-btn>
-      <v-btn variant="text" @click="emit('cancelar')">Cancelar</v-btn>
+      <v-btn
+        type="submit"
+        color="primary"
+        prepend-icon="mdi-content-save"
+        :loading="saving"
+        :disabled="saving"
+      >
+        Salvar
+      </v-btn>
+      <v-btn variant="text" :disabled="saving" @click="emit('cancelar')">Cancelar</v-btn>
     </v-card-actions>
   </v-form>
 </template>

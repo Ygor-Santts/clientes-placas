@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import EmptyState from '@/components/EmptyState.vue'
 import { useConsultaFinalPlaca } from '@/composables/useConsultaFinalPlaca'
 import type { Cliente } from '@/types/cliente'
 
@@ -67,18 +68,18 @@ function selecionarDigito(n: number) {
       <tbody>
         <tr v-if="digito === '' || typeof digito !== 'number' || Number.isNaN(digito) || digito < 0 || digito > 9">
           <td colspan="5">
-            <div class="empty-state">
-              <v-icon color="primary">mdi-numeric-off</v-icon>
-              <p class="text-body1">Selecione ou digite um número de 0 a 9.</p>
-            </div>
+            <EmptyState
+              icon="mdi-numeric-off"
+              title="Selecione ou digite um número de 0 a 9."
+            />
           </td>
         </tr>
         <tr v-else-if="resultado.length === 0">
           <td colspan="5">
-            <div class="empty-state">
-              <v-icon color="primary">mdi-magnify-close</v-icon>
-              <p class="text-body1">Nenhum cliente com placa terminando em <strong>{{ digito }}</strong>.</p>
-            </div>
+            <EmptyState
+              icon="mdi-magnify-close"
+              :title="`Nenhum cliente com placa terminando em ${digito}.`"
+            />
           </td>
         </tr>
         <tr v-for="c in resultado" :key="c.id" class="table-row">

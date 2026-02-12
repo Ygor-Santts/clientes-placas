@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import EmptyState from '@/components/EmptyState.vue'
 import type { Cliente } from '@/types/cliente'
 
 defineProps<{
@@ -10,6 +11,7 @@ const emit = defineEmits<{
   novo: []
   editar: [id: number]
   excluir: [id: number]
+  carregarMock: []
 }>()
 
 function enderecoResumo(c: Cliente) {
@@ -50,14 +52,35 @@ function enderecoResumo(c: Cliente) {
         </tr>
         <tr v-else-if="clientes.length === 0">
           <td colspan="6">
-            <div class="empty-state">
-              <v-icon color="primary">mdi-account-off-outline</v-icon>
-              <p class="text-h6 font-weight-medium">Nenhum cliente cadastrado</p>
-              <p class="text-body2 mt-1">Clique em "Novo cliente" para começar.</p>
-              <v-btn color="primary" class="mt-4" prepend-icon="mdi-plus" @click="emit('novo')">
-                Cadastrar primeiro cliente
-              </v-btn>
-            </div>
+            <EmptyState
+              icon="mdi-account-off-outline"
+              title="Nenhum cliente cadastrado"
+              description="Clique em 'Novo cliente' para começar."
+            >
+              <template #actions>
+                <div class="empty-state-actions">
+                  <v-btn
+                    color="primary"
+                    height="70"
+                     width="100%"
+                    prepend-icon="mdi-plus"
+                    @click="emit('novo')"
+                  >
+                    Cadastrar primeiro cliente
+                  </v-btn>
+                  <v-btn
+                    variant="outlined"
+                    color="primary"
+                    height="70"
+                    width="100%"
+                    prepend-icon="mdi-database-import"
+                    @click="emit('carregarMock')"
+                  >
+                    Carregar dados de exemplo
+                  </v-btn>
+                </div>
+              </template>
+            </EmptyState>
           </td>
         </tr>
         <tr v-for="c in clientes" :key="c.id" class="table-row">

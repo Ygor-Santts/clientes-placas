@@ -7,9 +7,9 @@ export default createVuetify({
   components,
   directives,
   theme: {
-    defaultTheme: 'appTheme',
+    defaultTheme: 'appThemeLight',
     themes: {
-      appTheme: {
+      appThemeLight: {
         dark: false,
         colors: {
           primary: '#0d9488',
@@ -17,6 +17,16 @@ export default createVuetify({
           secondary: '#64748b',
           surface: '#f8fafc',
           background: '#f1f5f9',
+        },
+      },
+      appThemeDark: {
+        dark: true,
+        colors: {
+          primary: '#0d9488',
+          'primary-darken-1': '#0f766e',
+          secondary: '#94a3b8',
+          surface: '#1e293b',
+          background: '#0f172a',
         },
       },
     },

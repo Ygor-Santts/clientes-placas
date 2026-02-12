@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useClienteStore } from '@/stores/clienteStore'
+import { seedMockClientes } from '@/api/seedMock'
 import ClienteLista from '@/components/ClienteLista.vue'
 
 const router = useRouter()
@@ -46,6 +47,14 @@ async function confirmarExcluir() {
     fecharDialogExcluir()
   } catch {}
 }
+
+async function carregarMock() {
+  try {
+    await seedMockClientes(true)
+    await store.carregarTodos()
+    store.showSnackbar('Dados de exemplo carregados.')
+  } catch {}
+}
 </script>
 
 <template>
@@ -59,6 +68,7 @@ async function confirmarExcluir() {
       @novo="novo"
       @editar="editar"
       @excluir="abrirDialogExcluir"
+      @carregar-mock="carregarMock"
     />
     <v-dialog v-model="dialogExcluir" max-width="400" persistent rounded="lg">
       <v-card>

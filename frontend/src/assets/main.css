@@ -42,12 +42,41 @@ body {
 }
 
 .empty-state {
-  padding: 48px 24px;
+  padding: 24px 24px;
   text-align: center;
   color: #64748b;
+  height: calc(100vh - 300px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-.empty-state .mdi {
+/* Apenas o ícone principal do empty state (não os ícones dos botões) */
+.empty-state > .v-icon {
   font-size: 64px;
   opacity: 0.5;
   margin-bottom: 16px;
+}
+
+.empty-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.empty-state-actions .v-btn {
+  min-width: 0;
+  min-height: 40px;
+  text-transform: none;
+  letter-spacing: normal;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state-actions .v-btn .v-icon {
+  margin-bottom: 0;
 }
