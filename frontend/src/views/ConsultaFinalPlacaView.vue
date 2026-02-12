@@ -3,8 +3,10 @@ import ConsultaFinalPlaca from '@/components/ConsultaFinalPlaca.vue'
 </script>
 
 <template>
-  <v-container fluid>
-    <h1 class="text-h5 mb-4">Consulta por Final da Placa</h1>
+  <div>
+    <div class="d-flex align-center mb-4">
+      <h1 class="text-h4 font-weight-bold text-primary">Consulta por final da placa</h1>
+    </div>
     <ConsultaFinalPlaca />
-  </v-container>
+  </div>
 </template>

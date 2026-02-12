@@ -13,22 +13,34 @@ onMounted(async () => {
 
 <template>
   <v-app>
-    <v-app-bar color="primary" density="compact">
-      <v-app-bar-title>Sistema de Clientes e Placas</v-app-bar-title>
+    <v-app-bar color="primary" elevation="1" density="default">
+      <v-app-bar-title class="font-weight-semibold">
+        Sistema de Clientes e Placas
+      </v-app-bar-title>
       <v-spacer />
-      <v-btn to="/" variant="text" icon="mdi-format-list-bulleted" aria-label="Lista de clientes" />
-      <v-btn to="/cliente/novo" variant="text" icon="mdi-plus" aria-label="Novo cliente" />
-      <v-btn to="/consulta-final-placa" variant="text" icon="mdi-numeric" aria-label="Consulta por final da placa" />
+      <v-btn to="/" variant="text" class="mr-1">
+        <v-icon start>mdi-format-list-bulleted</v-icon>
+        Clientes
+      </v-btn>
+      <v-btn to="/cliente/novo" variant="flat" color="white" class="text-primary">
+        <v-icon start>mdi-plus</v-icon>
+        Novo
+      </v-btn>
+      <v-btn to="/consulta-final-placa" variant="text" class="ml-1">
+        <v-icon start>mdi-numeric</v-icon>
+        Final da placa
+      </v-btn>
     </v-app-bar>
-    <v-main>
-      <div id="main-content" tabindex="-1">
+    <v-main class="pb-8">
+      <div id="main-content" tabindex="-1" class="app-content pa-4">
         <v-alert
           v-if="store.error"
           type="error"
           closable
           role="alert"
           aria-live="assertive"
-          class="ma-4"
+          class="mb-4"
+          rounded="lg"
           @click:close="store.clearError()"
         >
           {{ store.error }}
@@ -37,11 +49,23 @@ onMounted(async () => {
           <suspense>
             <component :is="Component" />
             <template #fallback>
-              <v-progress-linear indeterminate color="primary" class="ma-4" />
+              <v-progress-linear indeterminate color="primary" class="rounded-lg" />
             </template>
           </suspense>
         </router-view>
       </div>
     </v-main>
+    <v-snackbar
+      :model-value="!!store.snackbarMessage"
+      color="primary"
+      location="bottom"
+      rounded="pill"
+      @update:model-value="(v) => !v && (store.snackbarMessage = null)"
+    >
+      {{ store.snackbarMessage }}
+      <template #actions>
+        <v-btn variant="text" size="small" icon="mdi-close" @click="store.snackbarMessage = null" />
+      </template>
+    </v-snackbar>
   </v-app>
 </template>

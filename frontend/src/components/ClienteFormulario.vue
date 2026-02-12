@@ -134,9 +134,14 @@ function onInputPlaca(e: Event) {
       role="alert"
       aria-live="assertive"
       class="mb-4"
+      rounded="lg"
     >
       {{ alertMessage }}
     </v-alert>
+    <p class="text-subtitle-1 font-weight-medium text-medium-emphasis mb-3">
+      <v-icon size="small" start>mdi-account</v-icon>
+      Dados do cliente
+    </p>
     <v-row>
       <v-col cols="12" md="6">
         <v-text-field
@@ -182,6 +187,12 @@ function onInputPlaca(e: Event) {
           @input="onInputPlaca"
         />
       </v-col>
+    </v-row>
+    <p class="text-subtitle-1 font-weight-medium text-medium-emphasis mb-3 mt-4">
+      <v-icon size="small" start>mdi-map-marker</v-icon>
+      Endereço (opcional)
+    </p>
+    <v-row>
       <v-col cols="12" md="4">
         <v-text-field
           :model-value="cep"
@@ -222,8 +233,9 @@ function onInputPlaca(e: Event) {
         />
       </v-col>
     </v-row>
+    <v-divider class="my-4" />
     <v-card-actions class="px-0">
-      <v-btn type="submit" color="primary">Salvar</v-btn>
+      <v-btn type="submit" color="primary" prepend-icon="mdi-content-save">Salvar</v-btn>
       <v-btn variant="text" @click="emit('cancelar')">Cancelar</v-btn>
     </v-card-actions>
   </v-form>

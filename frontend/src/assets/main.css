@@ -3,9 +3,9 @@
   top: -100px;
   left: 8px;
   padding: 8px 12px;
-  background: #1976d2;
+  background: #0d9488;
   color: white;
-  border-radius: 4px;
+  border-radius: 8px;
   z-index: 9999;
   transition: top 0.2s;
 }
@@ -16,6 +16,8 @@
 body {
   margin: 0;
   min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: #f1f5f9;
 }
 
 #main-content {
@@ -24,4 +26,28 @@ body {
 
 [role="alert"] {
   margin: 8px 0;
+}
+
+.app-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.v-app-bar .v-toolbar__content {
+  padding-inline: 20px;
+}
+
+.table-row:hover {
+  background-color: rgba(13, 148, 136, 0.04);
+}
+
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: #64748b;
+}
+.empty-state .mdi {
+  font-size: 64px;
+  opacity: 0.5;
+  margin-bottom: 16px;
 }

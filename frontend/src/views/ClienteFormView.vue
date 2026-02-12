@@ -49,14 +49,22 @@ function cancelar() {
 </script>
 
 <template>
-  <v-container fluid>
-    <h1 class="text-h5 mb-4">{{ id == null ? 'Novo Cliente' : 'Editar Cliente' }}</h1>
-    <ClienteFormulario
-      v-if="!loading"
-      :cliente="cliente"
-      @salvar="salvar"
-      @cancelar="cancelar"
-    />
-    <v-progress-linear v-else indeterminate color="primary" />
-  </v-container>
+  <div>
+    <div class="d-flex align-center mb-4">
+      <h1 class="text-h4 font-weight-bold text-primary">
+        {{ id == null ? 'Novo cliente' : 'Editar cliente' }}
+      </h1>
+    </div>
+    <v-card v-if="!loading" class="pa-4 pa-sm-6">
+      <ClienteFormulario
+        :cliente="cliente"
+        @salvar="salvar"
+        @cancelar="cancelar"
+      />
+    </v-card>
+    <v-card v-else class="pa-8">
+      <v-progress-linear indeterminate color="primary" rounded />
+      <p class="text-center text-medium-emphasis mt-3">Carregando...</p>
+    </v-card>
+  </div>
 </template>

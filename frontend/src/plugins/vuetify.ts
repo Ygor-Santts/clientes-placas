@@ -7,6 +7,33 @@ export default createVuetify({
   components,
   directives,
   theme: {
-    defaultTheme: 'light',
+    defaultTheme: 'appTheme',
+    themes: {
+      appTheme: {
+        dark: false,
+        colors: {
+          primary: '#0d9488',
+          'primary-darken-1': '#0f766e',
+          secondary: '#64748b',
+          surface: '#f8fafc',
+          background: '#f1f5f9',
+        },
+      },
+    },
+  },
+  defaults: {
+    VCard: {
+      elevation: 2,
+      rounded: 'lg',
+    },
+    VBtn: {
+      rounded: 'lg',
+    },
+    VTextField: {
+      variant: 'outlined',
+      density: 'comfortable',
+      rounded: 'lg',
+      hideDetails: 'auto',
+    },
   },
 })
