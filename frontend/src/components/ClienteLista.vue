@@ -22,15 +22,15 @@ function enderecoResumo(c: Cliente) {
 
 <template>
   <v-card>
-    <v-card-title class="d-flex align-center pa-4 pb-0">
+    <v-card-title class="d-flex align-center pa-4 pb-0 pb-2">
       <v-icon start color="primary">mdi-account-group</v-icon>
       Lista de clientes
+      <v-card-actions class="pt-2 px-4">
+        <v-btn color="primary" prepend-icon="mdi-plus" @click="emit('novo')">
+          Novo cliente
+        </v-btn>
+      </v-card-actions>
     </v-card-title>
-    <v-card-actions class="pt-2 px-4">
-      <v-btn color="primary" prepend-icon="mdi-plus" @click="emit('novo')">
-        Novo cliente
-      </v-btn>
-    </v-card-actions>
     <v-divider />
     <v-table class="table-row">
       <thead>
