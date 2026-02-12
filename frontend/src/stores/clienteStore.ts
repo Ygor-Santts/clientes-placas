@@ -7,6 +7,17 @@ export const useClienteStore = defineStore('cliente', () => {
   const clientes = ref<Cliente[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
+  const snackbarMessage = ref<string | null>(null)
+  let snackbarTimeout: ReturnType<typeof setTimeout> | null = null
+
+  function showSnackbar(message: string) {
+    if (snackbarTimeout) clearTimeout(snackbarTimeout)
+    snackbarMessage.value = message
+    snackbarTimeout = setTimeout(() => {
+      snackbarMessage.value = null
+      snackbarTimeout = null
+    }, 3500)
+  }
 
   const listar = computed(() => clientes.value)
 
@@ -42,6 +53,7 @@ export const useClienteStore = defineStore('cliente', () => {
     try {
       const novo = await clienteService.criarCliente(data)
       clientes.value = [...clientes.value, novo]
+      showSnackbar('Cliente cadastrado com sucesso!')
       return novo
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Erro ao criar cliente'
@@ -62,6 +74,7 @@ export const useClienteStore = defineStore('cliente', () => {
         next[idx] = atualizado
         clientes.value = next
       }
+      showSnackbar('Cliente atualizado com sucesso!')
       return atualizado
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Erro ao atualizar cliente'
@@ -77,6 +90,7 @@ export const useClienteStore = defineStore('cliente', () => {
     try {
       await clienteService.removerCliente(id)
       clientes.value = clientes.value.filter((c) => c.id !== id)
+      showSnackbar('Cliente removido.')
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Erro ao remover cliente'
       throw e
@@ -107,6 +121,8 @@ export const useClienteStore = defineStore('cliente', () => {
     listar,
     loading,
     error,
+    snackbarMessage,
+    showSnackbar,
     carregarTodos,
     buscarPorId,
     criar,
