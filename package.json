@@ -1,0 +1,10 @@
+{
+  "name": "sistema-clientes-placas",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "test:frontend": "cd frontend && npm run test",
+    "run": "bash run.sh"
+  }
+}
